@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Test TAI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; color: #333; }
+        .container { max-width: 700px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; font-size: 1.5rem; text-align: center; }
+        .question { font-weight: bold; margin-bottom: 15px; font-size: 1.1rem; }
+        .options label { display: block; background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; transition: background 0.2s; }
+        .options label:hover { background: #e9ecef; }
+        .options input { margin-right: 10px; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 4px; cursor: pointer; display: block; width: 100%; margin-top: 20px; }
+        button:hover { background: #2980b9; }
+        #result { margin-top: 20px; font-weight: bold; text-align: center; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador Test TAI</h1>
+        <div id="quiz-box">
+            <div id="question-container" class="question">Cargando pregunta...</div>
+            <div id="options-container" class="options"></div>
+            <button id="next-btn" onclick="siguientePregunta()">Siguiente</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Banco de preguntas de ejemplo para el TAI
+        const preguntas = [
+            {
+                pregunta: "¿Cuál de las siguientes memorias es volátil?",
+                opciones: ["ROM", "RAM", "EPROM", "Flash"],
+                correcta: 1 // Índice de la opción correcta (empezando en 0 -> RAM)
+            },
+            {
+                pregunta: "En el modelo OSI, ¿en qué capa trabaja principalmente un switch tradicional?",
+                opciones: ["Capa Física", "Capa de Enlace de Datos", "Capa de Red", "Capa de Transporte"],
+                correcta: 1
+            }
+        ];
+
+        let preguntaActual = 0;
+        let aciertos = 0;
+
+        function cargarPregunta() {
+            if (preguntaActual < preguntas.length) {
+                const q = preguntas[preguntaActual];
+                document.getElementById("question-container").innerText = `${preguntaActual + 1}. ${q.pregunta}`;
+                
+                let opcionesHtml = "";
+                q.opciones.forEach((opcion, index) => {
+                    opcionesHtml += `<label><input type="radio" name="opcion" value="${index}"> ${opcion}</label>`;
+                });
+                document.getElementById("options-container").innerHTML = opcionesHtml;
+            } else {
+                document.getElementById("quiz-box").style.display = "none";
+                document.getElementById("result").innerText = `¡Test finalizado! Has acertado ${aciertos} de ${preguntas.length} preguntas.`;
+            }
+        }
+
+        function siguientePregunta() {
+            const seleccionada = document.querySelector('input[name="opcion"]:checked');
+            if (!seleccionada) {
+                alert("Por favor, selecciona una opción.");
+                return;
+            }
+
+            const respuestaUsuario = parseInt(seleccionada.value);
+            if (respuestaUsuario === preguntas[preguntaActual].correcta) {
+                aciertos++;
+            }
+
+            preguntaActual++;
+            cargarPregunta();
+        }
+
+        // Inicializar el test al cargar la página
+        cargarPregunta();
+    </script>
+</body>
+</html>
